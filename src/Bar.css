@@ -1,0 +1,44 @@
+#bar {
+    --widget-background-color: var(--base);
+    --widget-border-radius: 1rem;
+    --widget-text-color: var(--text);
+    --widget-inner-spacing: var(--large);
+    --widget-gap: var(--medium);
+    --bar-height: 30px; /* react to scaling smh? */
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    display: flex;
+    gap: 1rem;
+    width: 100%;
+    height: var(--bar-height);
+    padding: 0 2rem;
+    color: var(--widget-text-color);
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+
+    font-size: 0.75rem;
+}
+
+#widgets_left {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: var(--widget-gap);
+}
+
+#widgets_center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--widget-gap);
+}
+
+#widgets_right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--widget-gap);
+}

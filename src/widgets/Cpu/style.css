@@ -1,0 +1,58 @@
+#widget_cpu {
+    /* --button-background-color: var(--overlay0); */
+
+    display: flex;
+    background-color: var(--widget-background-color);
+    gap: 0.25rem;
+    height: var(--bar-height);
+    align-items: center;
+    padding: 0 var(--widget-inner-spacing);
+    border-radius: var(--widget-border-radius);
+    position: relative;
+    overflow: hidden;
+
+    .cpu-graph {
+        display: flex;
+        align-items: flex-end;
+        height: 100%;
+        width: 100%;
+    }
+
+    .cpu-graph_bar {
+        background-color: var(--text);
+        border-radius: 0.125rem;
+        transition: height 0.25s ease;
+        min-height: 1px;
+    }
+
+    .cpu-tooltip {
+        position: absolute;
+        top: 50%;
+        right: 0;
+        bottom: 0;
+        left: 50%;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--widget-background-color);
+        color: var(--text);
+        transform: translate(-50%, -50%);
+        opacity: 0;
+        transition: opacity 0.5s ease;
+
+        #widget_cpu:hover & {
+            opacity: 0.8;
+        }
+    }
+
+    .cpu-usage {
+        font-size: 0.8rem;
+        line-height: 1;
+        user-select: none;
+    }
+
+}

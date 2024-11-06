@@ -1,0 +1,12 @@
+#widget_current-window {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    background-color: var(--widget-background-color);
+    border-radius: var(--widget-border-radius);
+    padding: 0 var(--widget-inner-spacing);
+    color: var(--widget-text-color);
+    border: 0;
+    height: var(--bar-height);
+    user-select: none;
+}

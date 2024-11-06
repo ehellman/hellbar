@@ -1,0 +1,17 @@
+.graph {
+    display: flex;
+    align-items: flex-end;
+    height: 100%;
+    width: 100%;
+    
+    &.flipped {
+        transform: scaleY(-1);
+    }
+}
+
+.graph_bar {
+    background-color: var(--text);
+    border-radius: 0.125rem 0.125rem 0 0;
+    transition: height 0.25s ease;
+    min-height: 1px;
+}
