@@ -14,10 +14,10 @@ function App() {
   return (
     <div id="bar">
       <div id="widgets_left">
-        <Workspaces />
+        <CurrentWindow />
       </div>
       <div id="widgets_center">
-        <CurrentWindow />
+        <Workspaces />
       </div>
       <div id="widgets_right">
         <BindingModes />

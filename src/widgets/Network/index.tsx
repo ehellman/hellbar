@@ -11,21 +11,25 @@ const enum DisplayMode {
 
 function NetworkIcon({ type }: { type: NetworkInterfaceType | undefined }) {
   if (!type) return null;
-
+  function wrap(icon: string) {
+    return <span class="icon">{icon}</span>
+  }
   switch (type) {
     case 'ethernet':
-      return '🌐';
+      return wrap('🌐');
     case 'wifi':
-      return '📶';
+      return wrap('');
     default:
       return null;
   }
 }
 
-export default function Network() {
+export default function Network({ maxEntries }: { maxEntries: number }) {
   const [displayMode, setDisplayMode] = useState<DisplayMode>(
     DisplayMode.Connection,
   );
+  console.log({ displayMode }) // delete this after debug
+
   const { network } = useNetwork();
   const [received, setReceived] = useState<number[]>(new Array(10).fill(0));
   const [transmitted, setTransmitted] = useState<number[]>(
@@ -54,47 +58,30 @@ export default function Network() {
     }
   }, [network?.traffic]);
 
+      // <span>
+      //   {displayMode === DisplayMode.Connection
+      //     ? network.defaultInterface?.friendlyName
+      //     : network.defaultInterface?.ipv4Addresses[0].split('/')[0]}
+      // </span>
   return network ? (
     <div id="widget_network" onClick={handleClick}>
-      {/* <NetworkIcon type={network.defaultInterface?.type} />
-      <span>
-        {displayMode === DisplayMode.Connection
-          ? network.defaultInterface?.friendlyName
-          : network.defaultInterface?.ipv4Addresses[0].split('/')[0]}
-      </span> */}
-      {/* <div className="cpu-tooltip">
-        <div className="cpu-usage">{Math.round(cpu?.usage)}%</div>
-      </div> */}
+      <NetworkIcon type={network.defaultInterface?.type} />
       {network.traffic && (
         <>
-          <div
-            className="graphs"
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              height: '100%',
-            }}
-          >
-            <span className={network.traffic.received.siUnit === 'kB' ? 'low' : ''}>
+          <div className="graphs">
+            <span className={['kB', 'B'].includes(network.traffic.received.siUnit) ? 'low' : ''}>
               {Math.round(network.traffic.received.siValue)}
               {network.traffic.received.siUnit}
             </span>
-            <span className={network.traffic.transmitted.siUnit === 'kB' ? 'low' : ''}>
+            <span className={['kB', 'B'].includes(network.traffic.transmitted.siUnit) ? 'low' : ''}>
               {Math.round(network.traffic.transmitted.siValue)}
               {network.traffic.transmitted.siUnit}
             </span>
           </div>
-          <div
-            className="graphs"
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              height: '100%',
-            }}
-          >
+          <div className="graphs">
             <Graph
               entries={received}
-              historyLength={10}
+              historyLength={maxEntries}
               scaleToHistoricMax
               thresholds={{
                 green: { limit: 20, color: 'var(--sapphire)', opacity: 0.4 },
@@ -106,7 +93,7 @@ export default function Network() {
             />
             <Graph
               entries={transmitted}
-              historyLength={10}
+              historyLength={maxEntries}
               scaleToHistoricMax
               thresholds={{
                 green: { limit: 20, color: 'var(--green)', opacity: 0.4 },

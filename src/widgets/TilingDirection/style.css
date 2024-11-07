@@ -13,7 +13,7 @@
     justify-content: center;
 
     span {
-        color: var(--overlay0);
+        color: var(--surface0);
         font-size: 2rem;
         line-height: 1;
         position: absolute;

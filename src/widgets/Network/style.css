@@ -13,6 +13,11 @@
         cursor: pointer;
     }
 
+    .icon {
+        margin-right: 0.5rem;
+        line-height: 1;
+    }
+
     .cpu-usage {
         font-size: 0.8rem;
         line-height: 1;
@@ -20,6 +25,9 @@
     }
 
     .graphs {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
         span {
             font-size: 0.6rem;
             transition: opacity 0.25s ease;

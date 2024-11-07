@@ -1,5 +1,6 @@
 #widget_workspace {
-    --button-background-color: var(--surface0);
+    --button-background-color: var(--base);
+    --inactive-window-border-color: var(--overlay2);
 
     display: flex;
     /* background-color: var(--widget-background-color); */
@@ -13,67 +14,30 @@
     } */
     
 }
-/* 
-.workspace-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: var(--button-background-color);
-    border: none;
-    width: 1rem;
-    height: 1rem;
-    border-radius: 1rem;
-    position: relative;
-    transition: width 0.25s, height 0.25s ease;
-
-    &.displayed {
-        background-color: var(--overlay0);
-    }
-
-    &.current {
-        background-color: var(--sapphire);
-        width: 2rem;
-        height: 1.5rem;
-    }
-}
-
-.workspace-button_name,
-.workspace-button_display-name {
-    position: absolute;
-    line-height: 1;
-    font-size: 0.75rem;
-}
-
-.workspace-button_name {
-    opacity: 0;
-    .current & {
-        opacity: 1;
-    }
-}
-
-.workspace-button_display-name {
-    opacity: 0;
-} */
 
 .workspace_display {
     --gap-color: transparent;
-    --active-workspace-border-color: var(--mauve);
-    /* --gap-color: var(--overlay0); */
+    --active-workspace-border-color: var(--lavender);
+
     display: flex;
     position: relative;
     width: 2.8rem;
     height: 1.8rem;
-    gap: 1px;
+    gap: 2px;
+    padding: 1px;
     background-color: var(--gap-color);
     border: 1px solid;
+    border-radius: 2px;
     border-color: var(--gap-color);
     /* border-color: var(--base); */
     flex-direction: row;
+    transition: border-color 0.15s ease-in;
     &[data-tiling-direction="vertical"] {
         flex-direction: column;
     }
     &.focused {
         border-color: var(--active-workspace-border-color);
+        /* box-shadow: 0px 0px 3px var(--active-workspace-border-color); */
     }
 }
 
@@ -81,11 +45,16 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: var(--surface0);
-    border: 1px solid var(--overlay0);
-    transition: background-color 0.25s ease;
+    background-color: var(--widget-background-color);
+    box-shadow: inset 0px 0px 0 1px var(--surface2);
+    /* box-shadow: inset 0px 0px 0 1px var(--surface0); */
+    /* background-color: var(--widget-background-color); */
+    border-radius: 2px;
+    position: relative;
+    /* border: 1px solid var(--inactive-window-border-color); */
     &.focused {
-        background-color: var(--mauve);
+        background-color: var(--lavender);
+        box-shadow: inset 0px 0px 0 1px var(--lavender);
     }
     &.fullscreen {
         position: absolute;
@@ -100,9 +69,9 @@
         flex-wrap: wrap;
         line-height: 1;
         padding: 0 0.2rem;
-        color: var(--overlay2);
+        color: var(--overlay0);
 
-        span {
+        span:not(.icon) {
             width: 50%;
             &:nth-child(odd) {
                 text-align: left;
@@ -116,30 +85,31 @@
 }
 .workspace_split {
     display: flex;
-    gap: 1px;
+    gap: 2px;
     background-color: var(--gap-color);
 }
 
 .workspace_minimized {
-    --minimized-window-bar-height: 5px;
+    --minimized-window-bar-height: 6px;
     display: flex;
+    justify-content: center;
     gap: 2px;
     position: absolute;
     height: var(--minimized-window-bar-height);
-    top: calc(0% - var(--minimized-window-bar-height) - 2px);
+    top: calc(0% - var(--minimized-window-bar-height));
     left: 0;
     right: 0;
 }
 
 .workspace_minimized-window {
     display: flex;
-    background-color: var(--surface0);
+    background-color: var(--widget-background-color);
     border: 1px solid var(--surface2);
-    width: 5px;
-    height: 5px;
-    transition: border-color 0.25s ease;
+    border-radius: 2px;
+    width: var(--minimized-window-bar-height);
+    height: var(--minimized-window-bar-height);
     &.focused {
-        border-color: var(--mauve);
+        border-color: var(--lavender);
     }
 }
 

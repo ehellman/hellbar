@@ -40,6 +40,7 @@ function WorkspaceWindow({ child, ws }: WorkspaceWindowPropType) {
       style={{
         ...style[child.state.type],
       }}
+      data-pname={child.processName}
     >
       {child.state.type === glazewm.WindowType.FULLSCREEN ? (<>
         <span>󰁛</span><span>󰁜</span><span>󰁂</span><span>󰁃</span>
