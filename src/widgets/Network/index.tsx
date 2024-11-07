@@ -12,7 +12,7 @@ const enum DisplayMode {
 function NetworkIcon({ type }: { type: NetworkInterfaceType | undefined }) {
   if (!type) return null;
   function wrap(icon: string) {
-    return <span class="icon">{icon}</span>
+    return <span className="icon">{icon}</span>
   }
   switch (type) {
     case 'ethernet':
