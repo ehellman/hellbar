@@ -2,7 +2,7 @@ import './style.css';
 import classnames from 'classnames';
 import { useWindowManager } from '../../providers/wm';
 import * as glazewm from 'glazewm';
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 function convertToPercentage(value: number, of: number) {
   return (value / of) * 100;
@@ -22,6 +22,8 @@ function WorkspaceWindow({ child, ws }: WorkspaceWindowPropType) {
     },
     [glazewm.WindowType.FLOATING]: {
       position: 'absolute',
+      // left: `calc(0% + ${convertToPercentage(child.x, ws.width)}% - calc(${convertToPercentage(child.height, ws.height)}% / 2))`,
+      // top: `calc(0% + ${convertToPercentage(child.y, ws.height)}% - calc(${convertToPercentage(child.height, ws.height)}% / 2))`,
       left: `${convertToPercentage(child.x, ws.width)}%`,
       top: `${convertToPercentage(child.y, ws.height)}%`,
       width: `${convertToPercentage(child.width, ws.width)}%`,
@@ -95,14 +97,37 @@ function renderChild(
 
 export default function Workspaces() {
   const { workspace } = useWindowManager('glazewm');
+  const [recentlyChangedWorkspace, setRecentlyChangedWorkspace] = useState(false);
+  const prevWorkspace = useRef<string | undefined>();
+  const recentlyChangedTimeout = useRef<number | null>(null);
 
+  console.log({ cw: workspace?.currentWorkspaces })
   function changeWorkspace(ws: string) {
     workspace?.runCommand(`focus --workspace ${ws}`);
   }
+
+  useEffect(() => {
+    if (prevWorkspace.current !== workspace?.focusedWorkspace.name) {
+      setRecentlyChangedWorkspace(true);
+      if (recentlyChangedTimeout.current) clearTimeout(recentlyChangedTimeout.current);
+
+      recentlyChangedTimeout.current = setTimeout(() => {
+        setRecentlyChangedWorkspace(false);
+      }, 1000);
+      
+      prevWorkspace.current = workspace?.focusedWorkspace.name;
+
+      return () => {
+        if (recentlyChangedTimeout.current) {
+          clearTimeout(recentlyChangedTimeout.current);
+        }
+      }
+    }
+  }, [workspace?.focusedWorkspace.name]);
   
   return (
-    <div id="widget_workspace">
-      {workspace?.allWorkspaces.map((ws) => {
+    <div id="widget_workspace" className={classnames({ ["recently_changed"]: recentlyChangedWorkspace })}>
+      {workspace?.currentWorkspaces.map((ws) => {
         const { minimizedWindows, visibleContainers } = ws.children.reduce<{
           minimizedWindows: glazewm.Window[];
           visibleContainers: (glazewm.Window | glazewm.SplitContainer)[];
@@ -149,6 +174,7 @@ export default function Workspaces() {
             {visibleContainers.map((child) => {
               return renderChild(child, ws);
             })}
+            <div className="workspace_name">{ws.name}</div>
           </div>
         );
       })}

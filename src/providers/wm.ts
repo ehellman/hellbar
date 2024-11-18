@@ -9,26 +9,33 @@ type WmOutputMap = {
 };
 type WmOutput<T extends WmProvider> = WmOutputMap[T];
 
+const providers = zebar.createProviderGroup({ glazewm: { type: 'glazewm' }, komorebi: { type: 'komorebi' } });
 
-function createWorkspaceProvider(workspace: WmProvider) {
-  return zebar.createProvider({ type: workspace });
+function createWorkspaceProvider<T extends WmProvider>(workspace: T = 'glazewm' as T) {
+  return {
+    provider: providers.outputMap[workspace],
+    onOutput: (callback: (outputMap: WmOutput<T>) => void) => providers.onOutput(outputMap => {
+      return callback(outputMap[workspace]);
+    }),
+  }
+
 }
 
 export function useWindowManager<T extends WmProvider>(workspace: T = 'glazewm' as T) {
   const providerRef = useRef(createWorkspaceProvider(workspace));
   const [output, setOutput] = useState<WmOutput<T>>(
-    providerRef.current.output as WmOutput<T>,
+    providerRef?.current.provider as WmOutput<T>,
   );
 
   useEffect(() => {
-    providerRef.current.onOutput((output) => setOutput(output as WmOutput<T>));
+    if (providerRef.current) {
+
+      providerRef.current.onOutput((output) => setOutput(output as WmOutput<T>));
+    }
   }, [workspace]);
 
   return {
     workspace: output,
     onOutput: providerRef.current.onOutput,
-    onError: providerRef.current.onError,
-    hasError: providerRef.current.hasError,
-    error: providerRef.current.error,
   };
 }

@@ -4,10 +4,10 @@ import { useNetwork } from '../../providers/network';
 import type { InterfaceType as NetworkInterfaceType } from 'zebar';
 import Graph from '../../components/Graph';
 
-const enum DisplayMode {
-  Connection = 0,
-  Address = 1,
-}
+// const enum DisplayMode {
+//   Connection = 0,
+//   Address = 1,
+// }
 
 function NetworkIcon({ type }: { type: NetworkInterfaceType | undefined }) {
   if (!type) return null;
@@ -25,10 +25,11 @@ function NetworkIcon({ type }: { type: NetworkInterfaceType | undefined }) {
 }
 
 export default function Network({ maxEntries }: { maxEntries: number }) {
-  const [displayMode, setDisplayMode] = useState<DisplayMode>(
-    DisplayMode.Connection,
-  );
-  console.log({ displayMode }) // delete this after debug
+  // const [displayMode, setDisplayMode] = useState<DisplayMode>(
+  //   DisplayMode.Connection,
+  // );
+
+  // displayMode; // TODO: remove this line
 
   const { network } = useNetwork();
   const [received, setReceived] = useState<number[]>(new Array(10).fill(0));
@@ -38,11 +39,11 @@ export default function Network({ maxEntries }: { maxEntries: number }) {
   // const isConnected = !!network?.defaultInterface?.ipv4Addresses?.length;
 
   function handleClick() {
-    setDisplayMode((prevMode) =>
-      prevMode === DisplayMode.Connection
-        ? DisplayMode.Address
-        : DisplayMode.Connection,
-    );
+    // setDisplayMode((prevMode) =>
+    //   prevMode === DisplayMode.Connection
+    //     ? DisplayMode.Address
+    //     : DisplayMode.Connection,
+    // );
   }
 
   useEffect(() => {
@@ -89,6 +90,7 @@ export default function Network({ maxEntries }: { maxEntries: number }) {
                 orange: { limit: 60, color: 'var(--sapphire)', opacity: 0.8 },
                 red: { color: 'var(--sapphire)', opacity: 1 },
               }}
+              graphStyle="bar"
               flipped
             />
             <Graph
@@ -101,6 +103,7 @@ export default function Network({ maxEntries }: { maxEntries: number }) {
                 orange: { limit: 60, color: 'var(--green)', opacity: 0.8 },
                 red: { color: 'var(--green)', opacity: 1 },
               }}
+              graphStyle="bar"
             />
           </div>
         </>

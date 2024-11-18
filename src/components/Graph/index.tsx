@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import './style.css';
 import classnames from 'classnames';
 
+type GraphStyle = 'bar' | 'line';
 type GraphThresholds = {
   green: { limit: number; color: string; opacity?: number };
   yellow: { limit: number; color: string; opacity?: number };
@@ -16,32 +17,59 @@ const defaultThresholds: GraphThresholds = {
   red: { color: 'var(--red)', opacity: 1 },
 };
 
-function getColor(usage: number, thresholds: GraphThresholds) {
-  if (usage < thresholds.green.limit) {
+function getColor(value: number, thresholds: GraphThresholds) {
+  if (value < thresholds.green.limit) {
     return {
-      backgroundColor: thresholds.green.color || defaultThresholds.green.color,
+      color: thresholds.green.color || defaultThresholds.green.color,
       opacity: thresholds.green.opacity || defaultThresholds.green.opacity,
     };
-  } else if (usage < thresholds.yellow.limit) {
+  } else if (value < thresholds.yellow.limit) {
     return {
-      backgroundColor: thresholds.yellow.color || defaultThresholds.yellow.color,
+      color: thresholds.yellow.color || defaultThresholds.yellow.color,
       opacity: thresholds.yellow.opacity || defaultThresholds.yellow.opacity,
     };
-  } else if (usage < thresholds.orange.limit) {
+  } else if (value < thresholds.orange.limit) {
     return {
-      backgroundColor: thresholds.orange.color || defaultThresholds.orange.color,
+      color: thresholds.orange.color || defaultThresholds.orange.color,
       opacity: thresholds.orange.opacity || defaultThresholds.orange.opacity,
     };
   } else {
     return {
-      backgroundColor: thresholds.red.color || defaultThresholds.red.color,
+      color: thresholds.red.color || defaultThresholds.red.color,
       opacity: thresholds.red.opacity || defaultThresholds.red.opacity,
     };
   }
 }
 
+export function isAllZeroes(arr: number[]) {
+  return arr.every((value) => value === 0);
+}
+
+export function useGraphHistory(maxEntries: number) {
+  const [graph, setGraph] = useState<number[]>(new Array(maxEntries).fill(0));
+
+  const add = useCallback((entry: number) => {
+    setGraph((prevGraph) => {
+      if (isAllZeroes(prevGraph)) {
+        const nextGraph = [
+          ...new Array(maxEntries).fill(entry),
+        ];
+        return nextGraph;
+      } else {
+        const nextGraph = [...prevGraph, entry];
+        return nextGraph.length > maxEntries ? nextGraph.slice(-maxEntries) : nextGraph;
+      }
+    });
+  }, [maxEntries]);
+
+  return {
+    add,
+    data: graph,
+  };
+}
+
 export type GraphSettings = {
-  graphStyle?: 'bar' | 'line';
+  graphStyle?: GraphStyle;
   scale?: number | undefined | null;
   scaleToHistoricMax?: boolean;
   flipped?: boolean;
@@ -62,10 +90,15 @@ export default function Graph({
   thresholds = defaultThresholds,
   flipped = false,
   entries,
+  graphStyle,
 }: GraphProps) {
   const maxValue = scale ? scale : DEFAULT_MAX_VALUE;
 
   const [historicMax, setHistoricMax] = useState<number>(maxValue);
+
+  function scaleEntry(entry: number) {
+    return (entry / (scaleToHistoricMax ? historicMax : maxValue)) * 100;
+  }
 
   useEffect(() => {
     if (!scaleToHistoricMax && maxValue === DEFAULT_MAX_VALUE) return;
@@ -84,20 +117,47 @@ export default function Graph({
     >
       {entries.map((entry, i) => {
         // scale entry to a 0-100 range
-        const scaledEntry =
-          (entry / (scaleToHistoricMax ? historicMax : maxValue)) * 100;
-        return (
+        const scaledEntry = scaleEntry(entry);
+
+        return graphStyle === 'bar' ? (
+          <GraphBar
+            key={`${i}-${entry}`}
+            entry={scaledEntry}
+            historyLength={historyLength}
+            thresholds={thresholds}
+          />
+        ) : (
           <div
             key={`${i}-${entry}`}
-            className="graph_bar"
+            className="graph_line"
             style={{
               height: `${scaledEntry}%`,
               width: `${100 / historyLength}%`,
               ...getColor(scaledEntry, thresholds),
             }}
-          />
+          >
+            <div className="graph_line-bar" />
+          </div>
         );
       })}
     </div>
   );
+}
+
+
+type PropType = {
+  historyLength: number;
+  thresholds: GraphThresholds;
+  entry: number;
+}
+
+function GraphBar({ entry, historyLength, thresholds }: PropType) {
+  return <div
+    className="graph_bar"
+    style={{
+      height: `${entry}%`,
+      width: `${100 / historyLength}%`,
+      ...getColor(entry, thresholds),
+    }}
+  />
 }

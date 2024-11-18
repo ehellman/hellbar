@@ -31,8 +31,6 @@ export default function Date() {
   const minute = date?.new.getMinutes();
   const seconds = date?.new.getSeconds();
 
-  console.log({ date, hour, minute, seconds });
-
   return (
     <div id="widget_binary-clock">
       <div className="normal-time">

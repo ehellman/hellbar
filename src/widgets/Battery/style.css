@@ -1,0 +1,45 @@
+#widget_battery {
+    display: flex;
+    background-color: var(--widget-background-color);
+    gap: 0.5rem;
+    height: var(--bar-height);
+    align-items: center;
+    padding: 0 var(--widget-inner-spacing);
+    border-radius: var(--widget-border-radius);
+    position: relative;
+    overflow: hidden;
+
+    &:hover {
+        cursor: pointer;
+    }
+
+    .icon {
+        font-size: 1rem;
+        line-height: 1;
+        color: var(--green);
+
+        &.warning {
+            color: var(--red);
+        }
+    }
+
+    .cpu-usage {
+        font-size: 0.8rem;
+        line-height: 1;
+        user-select: none;
+    }
+
+    .graphs {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        span {
+            font-size: 0.6rem;
+            transition: opacity 0.25s ease;
+            &.low {
+                opacity: 0.5;
+            }
+        }
+    }
+
+}

@@ -10,11 +10,9 @@ export default function TilingDirection() {
 
   function changeTilingDirection() {
     workspace?.runCommand(`toggle-tiling-direction`);
-
   }
 
   useEffect(() => { 
-    console.log('activeTimerRef.current', activeTimerRef.current);
     setActive(true);
     activeTimerRef.current = window.setTimeout(() => {
       setActive(false);

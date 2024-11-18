@@ -9,6 +9,7 @@ import Cpu from './widgets/Cpu';
 import Memory from './widgets/Memory';
 import CurrentWindow from './widgets/CurrentWindow';
 import Network from './widgets/Network';
+import Battery from './widgets/Battery';
 
 function App() {
   return (
@@ -23,8 +24,9 @@ function App() {
         <BindingModes />
         <TilingDirection />
         <Network maxEntries={10} />
-        <Cpu maxEntries={10} />
-        <Memory maxEntries={10} />
+        <Cpu maxEntries={20} />
+        <Memory maxEntries={20} />
+        <Battery maxEntries={10} />
         <Date />
       </div>
     </div>

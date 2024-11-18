@@ -6,7 +6,7 @@
     gap: 0.25rem;
     height: var(--bar-height);
     align-items: center;
-    padding: 0 var(--widget-inner-spacing);
+    /* padding: 0 var(--widget-inner-spacing); */
     border-radius: var(--widget-border-radius);
     position: relative;
     overflow: hidden;

@@ -8,6 +8,14 @@ export default defineConfig({
     react(),
     liveReload('dist/**', { alwaysReload: true })
   ],
+  optimizeDeps: {
+    include: ['zebar'],
+  },
+  resolve: {
+    alias: {
+      zebar: 'https://esm.sh/zebar@2'
+    }
+  },
   build: {
     target: 'esnext',
     rollupOptions: {
